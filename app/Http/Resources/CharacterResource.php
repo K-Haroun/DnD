@@ -14,6 +14,21 @@ class CharacterResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'user_id' => $this->user_id,
+            'name' => $this->name,
+            'race' => $this->race,
+            'class' => $this->class,
+            'alignment' => $this->alignment,
+            'level' => $this->level,
+            'current_hp' => $this->current_hp,
+            'max_hp' => $this->max_hp,
+            'backstory' => $this->backstory,
+            'armor_class' => $this->armor_class,
+            'initiative' => $this->initiative,
+            'speed' => $this->speed,
+            'strength' => $this->strength,
+        ];
     }
 }
