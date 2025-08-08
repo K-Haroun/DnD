@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StoryController;
 use App\Http\Resources\CharacterResource;
 use App\Http\Resources\ItemResource;
 use App\Http\Resources\NPCResource;
@@ -23,16 +24,8 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('test', function () {
-    return [
-        UserResource::make(User::find(1)),
-        StoryResource::make(Story::find(1)),
-        CharacterResource::make(Character::find(1)),
-        NPCResource::make(NPC::find(1)),
-        ItemResource::make(Item::find(1)),
-        SpellResource::make(Spell::find(1))
-    ];
-});
+// Stories
+Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

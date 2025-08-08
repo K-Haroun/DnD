@@ -16,8 +16,8 @@ class SpellResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'character_id' => $this->character_id,
-            'npc_id' => $this->npc_id,
+            'character' => CharacterResource::make($this->character),
+            'npc' => NPCResource::make($this->npc),
             'name' => $this->name,
             'description' => $this->description,
             'quantity' => $this->quantity,

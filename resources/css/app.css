@@ -127,7 +127,7 @@
     --popover: hsl(0 0% 3.9%);
     --popover-foreground: hsl(0 0% 98%);
     --primary: #1A1A1A;
-    --primary-foreground: hsl(0 0% 98%);
+    --primary-foreground: #2C2F33;
     --secondary: #6B4F3B;
     --secondary-foreground: #D8CBB3;
     --muted: #6B4F3B;
@@ -144,7 +144,7 @@
     --chart-3: hsl(30 80% 55%);
     --chart-4: hsl(280 65% 60%);
     --chart-5: hsl(340 75% 55%);
-    --sidebar-background: #2E4F2E;
+    --sidebar-background: #2C2F33;
     --sidebar-foreground: hsl(0 0% 95.9%);
     --sidebar-primary: hsl(360, 100%, 100%);
     --sidebar-primary-foreground: hsl(0 0% 100%);

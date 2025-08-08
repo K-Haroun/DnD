@@ -17,4 +17,9 @@ class Item extends Model
     {
         return $this->belongsTo(Character::class);
     }
+
+    public function npc(): BelongsTo
+    {
+        return $this->belongsTo(NPC::class);
+    }
 }
