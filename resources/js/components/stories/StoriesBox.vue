@@ -1,7 +1,5 @@
 <template>
-    <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
-        <div class="py-2 px-5 border rounded bg-primary-foreground hover:bg-accent cursor-pointer">
+        <div class="py-2 px-3 border rounded bg-primary hover:bg-accent cursor-pointer text-center text-sm">
             <slot />
         </div>
-    </div>
 </template>

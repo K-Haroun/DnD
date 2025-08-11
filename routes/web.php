@@ -26,6 +26,7 @@ Route::get('dashboard', function () {
 
 // Stories
 Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
+Route::get('/stories/{story}', [StoryController::class, 'show'])->name('stories.show');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

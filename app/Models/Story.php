@@ -19,6 +19,11 @@ class Story extends Model
         return $this->hasMany(Character::class);
     }
 
+    public function npcs(): HasMany
+    {
+        return $this->hasMany(NPC::class);
+    }
+
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withPivot('role')->withTimestamps();

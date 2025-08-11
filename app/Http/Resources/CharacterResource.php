@@ -17,6 +17,8 @@ class CharacterResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => UserResource::make($this->user),
+            // 'items' => ItemResource::collection($this->items),
+            // 'spells' => SpellResource::collection($this->spells),
             'name' => $this->name,
             'race' => $this->race,
             'class' => $this->class,
