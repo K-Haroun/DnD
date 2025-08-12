@@ -34,6 +34,8 @@
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
 
+    --color-accent-tab: var(--accent-tab);
+
     --color-destructive: var(--destructive);
     --color-destructive-foreground: var(--destructive-foreground);
 
@@ -134,6 +136,7 @@
     --muted-foreground: #D8CBB3;
     --accent: #1A1A1A;
     --accent-foreground: hsl(240 4.8% 95.9%);
+    --accent-tab: #2C2F33;
     --destructive: #7B1E1E;
     --destructive-foreground: #D8CBB3;
     --border: hsl(0 0% 14.9%);

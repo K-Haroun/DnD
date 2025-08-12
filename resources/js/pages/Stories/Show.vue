@@ -2,7 +2,11 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
-import StoriesBox from '@/components/stories/StoriesBox.vue';
+import { ref } from 'vue'
+import CharactersTab from './Tabs/CharactersTab.vue'
+import InventoryTab from './Tabs/InventoryTab.vue'
+import SpellsTab from './Tabs/SpellsTab.vue'
+import MapTab from './Tabs/MapTab.vue'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,50 +17,49 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 defineProps(['story']);
 
+const currentTab = ref('characters')
+
+const tabs = {
+    characters: CharactersTab,
+    inventory: InventoryTab,
+    spells: SpellsTab,
+    map: MapTab,
+}
+
 </script>
 
 <template>
+
     <Head title="Story" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="my-10">
-            <div class="text-center text-4xl mb-10">
+            <div class="text-center text-4xl mt-10 text-shadow-lg">
                 {{ story.title }}
             </div>
-            <div class="h-full flex items-center gap-10 px-20">
-                <div v-if="story.characters" class="basis-120 p-10 border overflow-auto bg-primary/50 shadow-2xl">
+            <div class="my-20 flex px-20">
+                <div v-if="story.characters" class="p-10 border h-70 overflow-auto bg-primary/50 shadow-2xl">
                     <!-- plot -->
                     {{ story.plot }}
                 </div>
-                <div v-if="story.characters && story.characters.length" class="basis-50 border p-7 text-sm bg-primary/50">
-                    <!-- user's character -->
-                     <h2 class="text-center text-lg font-bold mb-3">{{ story.characters[0].name }}</h2>
-                     <ul class="">
-                        <li>
-                            <p>Class: {{ story.characters[0].class }}</p>
-                        </li>
-                        <li>
-                            <p>Level: {{ story.characters[0].level }}</p>
-                        </li>
-                        <li>
-                            <p>Max HP: {{ story.characters[0].max_hp }}</p>
-                        </li>
-                        <li>
-                            <p>Armor Class: {{ story.characters[0].armor_class }}</p>
-                        </li>
-                        <li>
-                            <p>Speed: {{ story.characters[0].speed }}</p>
-                        </li>
-                        <li>
-                            <p>Strength: {{ story.characters[0].strength }}</p>
-                        </li>
-                        <li>
-                            <p>Initiative: {{ story.characters[0].initiative }}</p>
-                        </li>
-                        <li>
-                            <p>Alignment: {{ story.characters[0].alignment }}</p>
-                        </li>
-                     </ul>
+            </div>
+
+            <div class="border">
+
+            </div>
+
+            <div>
+                <div class="flex justify-center text-sm">
+                    <button
+                        v-for="(label, key) in { characters: 'Characters', inventory: 'Inventory', spells: 'Spells', map: 'Map' }"
+                        @click="currentTab = key" :class="['w-30 py-1 text-center border',
+                            currentTab === key ? 'bg-accent-tab/70' : 'bg-primary'
+                        ]">
+                        {{ label }}
+                    </button>
+                </div>
+                <div class="grid place-content-start pt-20">
+                    <component :is="tabs[currentTab as keyof typeof tabs]" :story="story" />
                 </div>
             </div>
         </div>
