@@ -16,8 +16,6 @@ class ItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'character' => CharacterResource::make($this->character),
-            'npc' => NPCResource::make($this->npc),
             'name' => $this->name,
             'description' => $this->description,
             'quantity' => $this->quantity,

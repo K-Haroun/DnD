@@ -58,7 +58,7 @@ const tabs = {
                         {{ label }}
                     </button>
                 </div>
-                <div class="grid place-content-start pt-20">
+                <div class="pt-20 h-150">
                     <component :is="tabs[currentTab as keyof typeof tabs]" :story="story" />
                 </div>
             </div>
