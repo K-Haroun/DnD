@@ -17,9 +17,9 @@ class StoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'users' => UserResource::collection($this->users),
-            'characters' => CharacterResource::collection($this->characters),
-            'npcs' => NPCResource::collection($this->npcs),
+            'users' => $this->whenLoaded('users', fn () => UserResource::collection($this->users)),
+            'characters' => $this->whenLoaded('characters', fn () => CharacterResource::collection($this->characters)),
+            'npcs' => $this->whenLoaded('npcs', fn () => NPCResource::collection($this->npcs)),
             'title' => $this->title,
             'plot' => $this->plot,
             'map' => $this->map
