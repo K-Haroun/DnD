@@ -22,7 +22,7 @@ defineProps(['stories']);
     <Head title="Stories" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex flex-col gap-1 my-5 mx-10">
+        <div class="flex flex-1 flex-col gap-1 my-5 mx-10">
             <div class="flex gap-3 text-sm mb-2">
                 <Button>
                     Create Story
@@ -39,6 +39,6 @@ defineProps(['stories']);
         </div>
 
 
-        <Pagination :meta="stories.meta" />
+        <Pagination :meta="stories.meta" :links="stories.links"/>
     </AppLayout>
 </template>

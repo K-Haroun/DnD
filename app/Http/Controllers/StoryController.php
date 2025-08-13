@@ -10,6 +10,7 @@ class StoryController extends Controller
 {
     public function index()
     {
+        // return Story::paginate();
         return inertia('Stories/Index', [
             'stories' => StoryResource::collection(Story::paginate()),
         ]);
