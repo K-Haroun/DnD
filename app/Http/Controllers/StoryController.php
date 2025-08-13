@@ -10,7 +10,6 @@ class StoryController extends Controller
 {
     public function index()
     {
-        // return Story::paginate();
         return inertia('Stories/Index', [
             'stories' => StoryResource::collection(Story::paginate()),
         ]);
@@ -18,8 +17,15 @@ class StoryController extends Controller
 
     public function show(Story $story)
     {
+
+        $story->load(['characters', 'npcs']);
+
         return inertia('Stories/Show', [
             'story' => StoryResource::make($story),
         ]);
+    }
+
+    public function create() {
+        return inertia('Stories/CreateModal');
     }
 }
