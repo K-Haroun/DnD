@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\StoryResource;
 use App\Models\Story;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class StoryController extends Controller
 {
     public function index()
     {
         return inertia('Stories/Index', [
-            'stories' => StoryResource::collection(Story::paginate()),
+            'stories' => StoryResource::collection(Story::latest()->paginate()),
         ]);
     }
 
@@ -25,7 +25,20 @@ class StoryController extends Controller
         ]);
     }
 
-    public function create() {
+    public function create()
+    {
         return inertia('Stories/CreateModal');
+    }
+    
+    public function store(): RedirectResponse
+    {
+
+        $validatedStory = request()->validate([
+            'title' => 'required|unique:stories|min:3|max:22|alpha_num',
+        ]);
+
+        Story::create($validatedStory);
+
+        return to_route('stories.index');
     }
 }

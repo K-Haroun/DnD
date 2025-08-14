@@ -28,6 +28,7 @@ Route::get('dashboard', function () {
 Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
 Route::get('/stories/create', [StoryController::class, 'create'])->name('stories.create');
 Route::get('/stories/{story}', [StoryController::class, 'show'])->name('stories.show');
+Route::post('/stories/store', [StoryController::class, 'store'])->name('stories.store');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

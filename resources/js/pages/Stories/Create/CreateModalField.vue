@@ -1,5 +1,5 @@
 <template setup>
-  <div class="flex flex-col my-5">
+  <div class="flex flex-col">
     <slot />
   </div>
 </template>

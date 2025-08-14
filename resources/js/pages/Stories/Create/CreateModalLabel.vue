@@ -1,9 +1,9 @@
 <script setup>
-defineProps(['for']);
+defineProps(['htmlFor']);
 </script>
 
 <template>
-  <label :for="for" class="text-2xl">
+  <label :for="htmlFor" class="text-lg">
     <slot />
   </label>
 </template>
