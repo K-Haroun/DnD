@@ -3,7 +3,7 @@ defineProps(['htmlFor']);
 </script>
 
 <template>
-  <label :for="htmlFor" class="text-lg">
+  <label :for="htmlFor" class="text-md">
     <slot />
   </label>
 </template>

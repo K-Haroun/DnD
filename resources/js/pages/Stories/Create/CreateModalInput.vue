@@ -14,17 +14,12 @@ defineProps({
     type: String,
     required: true,
   },
-  modelValue: {
-    type: [String, Number, File],
-    required: true,
-  },
+  placehoder: {
+    type: String
+  }
 });
 
-const model = defineModel()
-
-function update() {
-  model.value++
-}
+const model = defineModel();
 
 </script>
 
@@ -33,7 +28,8 @@ function update() {
     :type="type"
     :id="id"
     :name="name"
-    class="border px-3 w-1/2 text-md"
-    @input="update"
+    :placeholder="placehoder"
+    v-model="model"
+    class="border rounded border-primary/70 bg-primary/10 py-1 px-5 w-100 text-lg"
   />
 </template>
