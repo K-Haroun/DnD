@@ -5,6 +5,7 @@ import CreateModalInputFile from "./CreateModalInputFile.vue";
 import CreateModalLabel from "./CreateModalLabel.vue";
 import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
+import CreateModalTextArea from "./CreateModalTextArea.vue";
 
 const form = useForm({
   title: "",
@@ -54,7 +55,7 @@ const handleFileChange = (event) => {
 
           <CreateModalField>
             <CreateModalLabel htmlFor="plot">Plot</CreateModalLabel>
-            <CreateModalInput
+            <CreateModalTextArea
               v-model="form.plot"
               type="text"
               id="plot"
@@ -71,7 +72,7 @@ const handleFileChange = (event) => {
               id="map"
               name="map"
               label="Click to upload"
-              accept=".pdf,.jpg,.png"
+              accept=".pdf,.jpg,.png,.webp"
             />
             <span v-if="form.errors.map" class="text-red-500">{{ form.errors.map }}</span>
           </CreateModalField>

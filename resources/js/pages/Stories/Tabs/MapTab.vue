@@ -1,5 +1,16 @@
+<script setup>
+defineProps(["story"]);
+</script>
+
 <template>
-    <div class="grid place-content-center">
-        <img src="https://placehold.co/600x400" alt="map">
+  <div class="flex flex-1 h-full justify-center items-center">
+    <div class="max-w-[500px] m-auto">
+      <img
+        v-if="story.map_url"
+        :src="story.map_url"
+        :alt="story.title"
+        class="w-[100%] h-auto"
+      />
     </div>
+  </div>
 </template>

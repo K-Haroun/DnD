@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\Character;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class StoryResource extends JsonResource
 {
@@ -22,7 +23,8 @@ class StoryResource extends JsonResource
             'npcs' => $this->whenLoaded('npcs', fn () => NPCResource::collection($this->npcs)),
             'title' => $this->title,
             'plot' => $this->plot,
-            'map' => $this->map
+            'map' => $this->map,
+            'map_url' => $this->map ? Storage::url($this->map) : null,
         ];
     }
 }

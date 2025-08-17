@@ -57,4 +57,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Story::class)->withPivot('role')->withTimestamps();
     }
+
+    public function isGameMaster(Story $story)
+    {
+        return $this->stories->where('id', $story->id)->first()?->pivot->role === 'game_master';
+    }
 }

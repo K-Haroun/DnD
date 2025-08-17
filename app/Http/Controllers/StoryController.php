@@ -6,6 +6,7 @@ use App\Http\Resources\StoryResource;
 use App\Models\Story;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StoryController extends Controller
 {
@@ -19,10 +20,15 @@ class StoryController extends Controller
     public function show(Story $story)
     {
 
-        $story->load(['characters', 'npcs']);
+        $story->load(['users', 'characters', 'npcs']);
+
+        $user = Auth::user();
+
+        $isGameMaster = $user->isGameMaster($story);
 
         return inertia('Stories/Show', [
             'story' => StoryResource::make($story),
+            'isGameMaster' => $isGameMaster,
         ]);
     }
 
@@ -43,7 +49,7 @@ class StoryController extends Controller
             'regex:/^[\p{L}\p{N}\s]+$/u',
         ],
         'plot' => 'nullable|string',
-        'map' => 'nullable|file|mimes:pdf,jpg,png|max:5000', // max: 5MB
+        'map' => 'nullable|file|mimes:pdf,jpg,png,webp|max:5000', // max: 5MB
     ]);
 
     $path = null;
@@ -58,7 +64,12 @@ class StoryController extends Controller
         'map' => $path,
     ];
 
-    Story::create($storyData);
+    $story = Story::create($storyData);
+
+    $user = Auth::user();
+
+    // User is set to game master.
+    $story->users()->attach($user->id, ['role' => 'game_master']);
 
     return to_route('stories.index');
     }
