@@ -1,15 +1,14 @@
-<script setup lang="ts">
+<script setup>
 
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
 import { Head, Link, usePage, router } from '@inertiajs/vue3';
 import StoriesBox from '@/components/stories/StoriesBox.vue';
 import Button from '@/components/ui/button/Button.vue';
-import Pagination from '@/components/ui/pagination/Pagination.vue';
+import Pagination from '@/components/ui/pagination/pagination.vue';
 import CreateModal from './Create/CreateModal.vue'
 import { ref } from 'vue';
 
-const breadcrumbs: BreadcrumbItem[] = [
+const breadcrumbs = [
     {
         title: 'Stories',
         href: '/stories',
@@ -17,7 +16,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const showModal = ref(false)
-const modalProps = ref({})
 
 const openModal = () => showModal.value = true
 

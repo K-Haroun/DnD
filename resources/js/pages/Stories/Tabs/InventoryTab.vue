@@ -22,4 +22,7 @@ defineProps(['story'])
             </ul>
         </div>
     </div>
+    <div v-else class="grid h-full place-content-center">
+        <h2 class="text-xl">You have no items in your inventory!</h2>
+    </div>
 </template>

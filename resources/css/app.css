@@ -1,7 +1,10 @@
 @import 'tailwindcss';
-
 @import 'tw-animate-css';
+@import "flowbite/src/themes/default";
 
+@plugin "flowbite/plugin";
+
+@source "../node_modules/flowbite";
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
@@ -99,7 +102,7 @@
     --muted-foreground: #D8CBB3;
     --accent: #D8CBB3;
     --accent-foreground: hsl(0 0% 9%);
-    --destructive: hsl(0 84.2% 60.2%);
+    --destructive: red;
     --destructive-foreground: hsl(0 0% 98%);
     --border: hsl(0 0% 92.8%);
     --input: hsl(0 0% 89.8%);
@@ -137,7 +140,7 @@
     --accent: #1A1A1A;
     --accent-foreground: hsl(240 4.8% 95.9%);
     --accent-tab: #2C2F33;
-    --destructive: #7B1E1E;
+    --destructive: red;
     --destructive-foreground: #D8CBB3;
     --border: hsl(0 0% 14.9%);
     --input: hsl(0 0% 14.9%);

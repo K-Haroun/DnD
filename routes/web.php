@@ -30,6 +30,7 @@ Route::get('/stories/create', [StoryController::class, 'create'])->name('stories
 Route::get('/stories/{story}', [StoryController::class, 'show'])->name('stories.show');
 Route::post('/stories/store', [StoryController::class, 'store'])->name('stories.store');
 Route::patch('/stories/{story}', [StoryController::class, 'update'])->name('stories.update');
+Route::delete('/stories/{story}', [StoryController::class, 'destroy'])->name('stories.delete');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

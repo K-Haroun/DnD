@@ -7,6 +7,7 @@ use App\Models\Story;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class StoryController extends Controller
 {
@@ -83,5 +84,15 @@ class StoryController extends Controller
         $story->update($validatedData);
 
         return to_route('stories.show', [ 'story' => $story]);
+    }
+
+    public function destroy(Story $story) {
+
+        Gate::authorize('delete', $story);
+
+        $story->delete();
+
+        return redirect()->route('stories.index')
+                         ->with('message', 'Story deleted successfully!');
     }
 }

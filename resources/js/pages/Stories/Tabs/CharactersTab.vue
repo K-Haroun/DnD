@@ -36,4 +36,7 @@ defineProps(['story'])
             </ul>
         </div>
     </div>
+    <div v-else class="grid h-full place-content-center">
+        <h2 class="text-xl">There are no characters in this story!</h2>
+    </div>
 </template>

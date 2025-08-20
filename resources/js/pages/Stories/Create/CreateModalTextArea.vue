@@ -31,5 +31,6 @@ const model = defineModel();
     v-model="model"
     rows="10"
     cols="40"
-    class="block h-30 border rounded border-primary/70 bg-primary/10 py-1 px-5 text-lg resize-none" />
+    class="block h-30 border rounded border-primary/70 bg-primary/10 placeholder-gray-300/20 focus:ring-primary py-1 px-5 text-lg resize-none" />
 </template>
+

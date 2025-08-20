@@ -50,10 +50,12 @@ const submit = () => {
 
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="my-10">
-      <div class="text-center text-4xl mt-10 text-shadow-lg">
+      <div class="flex justify-end pr-10">
+        <KebabMenu v-if="isGameMaster" :story="props.story" />
+      </div>
+      <div class="text-center text-4xl mt-5 text-shadow-lg">
         {{ story.title }}
       </div>
-      <!-- <KebabMenu /> -->
       <div class="my-18 flex flex-col justify-center items-center gap-12 px-20">
         <div
           v-if="!continueStory"
@@ -98,6 +100,7 @@ const submit = () => {
             Continue Story
           </button>
         </div>
+        <span v-if="isGameMaster && continueStory" class="block h-8"></span>
       </div>
 
       <div class="border"></div>

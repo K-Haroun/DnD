@@ -50,7 +50,7 @@ function handleFileChange(event) {
 
     <label
       :for="id"
-      class="border rounded border-dashed border-primary/70 bg-primary/10 hover:bg-primary/15 transition-colors duration-300 text-sm flex flex-col justify-center items-center gap-1 w-100 h-30 cursor-pointer"
+      class="border rounded border-dashed border-primary/70 bg-primary/10 hover:bg-primary/50 transition-colors duration-300 text-sm flex flex-col justify-center items-center gap-1 w-100 h-30 cursor-pointer"
     >
       <Upload class="size-5"/>
       <span class="px-3">{{ label }}</span>

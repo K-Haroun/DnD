@@ -22,4 +22,7 @@ defineProps(['story'])
             </ul>
         </div>
     </div>
+    <div v-else class="grid h-full place-content-center">
+        <h2 class="text-xl">Your character has no spells!</h2>
+    </div>
 </template>

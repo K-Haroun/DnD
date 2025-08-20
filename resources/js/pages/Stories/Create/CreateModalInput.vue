@@ -30,6 +30,6 @@ const model = defineModel();
     :name="name"
     :placeholder="placehoder"
     v-model="model"
-    class="border rounded border-primary/70 bg-primary/10 py-1 px-5 w-100 text-lg"
+    class="border rounded border-primary/70 bg-primary/10 focus:ring-primary placeholder-gray-300/20 py-1 px-5 w-100 text-lg"
   />
 </template>
