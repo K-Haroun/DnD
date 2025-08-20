@@ -61,7 +61,7 @@ const handleFileChange = (event) => {
               id="plot"
               name="plot"
               placeholder="Once upon a time..."
-              class="pb-50 pt-3"
+              class="pt-3"
             />
           </CreateModalField>
 

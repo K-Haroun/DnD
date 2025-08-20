@@ -29,9 +29,7 @@ const model = defineModel();
     :name="name"
     :placeholder="placehoder"
     v-model="model"
-    rows="2"
+    rows="10"
     cols="40"
-    class="border rounded border-primary/70 bg-primary/10 py-1 px-5 text-lg resize-none">
-    test test test test
-    </textarea>
+    class="block h-30 border rounded border-primary/70 bg-primary/10 py-1 px-5 text-lg resize-none" />
 </template>

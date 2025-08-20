@@ -73,4 +73,15 @@ class StoryController extends Controller
 
     return to_route('stories.index');
     }
+
+    public function update(Request $request, Story $story) {
+
+        $validatedData = $request->validate([
+            'plot' => ['string', 'nullable']
+        ]);
+
+        $story->update($validatedData);
+
+        return to_route('stories.show', [ 'story' => $story]);
+    }
 }

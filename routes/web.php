@@ -29,6 +29,7 @@ Route::get('/stories', [StoryController::class, 'index'])->name('stories.index')
 Route::get('/stories/create', [StoryController::class, 'create'])->name('stories.create');
 Route::get('/stories/{story}', [StoryController::class, 'show'])->name('stories.show');
 Route::post('/stories/store', [StoryController::class, 'store'])->name('stories.store');
+Route::patch('/stories/{story}', [StoryController::class, 'update'])->name('stories.update');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
