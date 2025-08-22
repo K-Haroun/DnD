@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StoryController;
+use App\Http\Controllers\CharacterController;
 use App\Http\Resources\CharacterResource;
 use App\Http\Resources\ItemResource;
 use App\Http\Resources\NPCResource;
@@ -31,6 +32,10 @@ Route::get('/stories/{story}', [StoryController::class, 'show'])->name('stories.
 Route::post('/stories/store', [StoryController::class, 'store'])->name('stories.store');
 Route::patch('/stories/{story}', [StoryController::class, 'update'])->name('stories.update');
 Route::delete('/stories/{story}', [StoryController::class, 'destroy'])->name('stories.delete');
+
+// Characters
+Route::get('/characters', [CharacterController::class, 'index'])->name('characters.index');
+Route::post('/characters', [CharacterController::class, 'store'])->name('characters.store');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

@@ -1,12 +1,24 @@
 <script setup>
-defineProps(['story'])
+import { UserPlus } from 'lucide-vue-next';
+import Button from "@/components/ui/button/Button.vue";
+import { ref } from 'vue';
+import CreateCharacterModal from '@/pages/Characters/Create/CreateCharacterModal.vue';
+
+defineProps(['story']);
+
+const showModal = ref(false);
+
+const openModal = () => (showModal.value = true);
 </script>
 
 <template>
-    <div v-if="story.characters && story.characters.length"
-        class="grid grid-cols-5 gap-5 mx-20">
+    <div class="grid grid-cols-5 gap-5 mx-20">
         <!-- Characters -->
-        <div  v-for="character in story.characters" :key="character.id" class="basis-50 border p-5 text-sm bg-primary rounded">
+        <Button @click="openModal" class="border border-primary shadow-sm h-55 w-35 grid place-content-center text-primary bg-secondary hover:shadow-lg hover:bg-primary/5 hover:text-primary-foreground transition-all duration-300 cursor-pointer">
+            <UserPlus class="size-20"/>
+        </Button>
+        <CreateCharacterModal v-if="showModal" @close="showModal = false" :story="story"/>
+        <div v-if="story.characters && story.characters.length" v-for="character in story.characters" :key="character.id" class="basis-50 border p-5 text-sm bg-primary rounded">
             <h2 class="text-center text-lg font-bold mb-3">{{ character.name }}</h2>
             <ul>
                 <li>
@@ -35,8 +47,5 @@ defineProps(['story'])
                 </li>
             </ul>
         </div>
-    </div>
-    <div v-else class="grid h-full place-content-center">
-        <h2 class="text-xl">There are no characters in this story!</h2>
     </div>
 </template>

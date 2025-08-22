@@ -21,7 +21,7 @@ class StoryController extends Controller
     public function show(Story $story)
     {
 
-        $story->load(['users', 'characters', 'npcs']);
+        $story->load(['users', 'characters.items', 'characters.spells', 'npcs']);
 
         $user = Auth::user();
 

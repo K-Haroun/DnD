@@ -5,7 +5,7 @@ import { Head, Link, usePage, router } from '@inertiajs/vue3';
 import StoriesBox from '@/components/stories/StoriesBox.vue';
 import Button from '@/components/ui/button/Button.vue';
 import Pagination from '@/components/ui/pagination/pagination.vue';
-import CreateModal from './Create/CreateModal.vue'
+import CreateStoryModal from './Create/CreateStoryModal.vue'
 import { ref } from 'vue';
 
 const breadcrumbs = [
@@ -31,7 +31,7 @@ defineProps(['stories']);
     <div class="flex flex-1 flex-col gap-1 my-5 mx-10">
       <div class="flex gap-3 text-sm mb-2">
         <Button @click="openModal"> Create Story </Button>
-        <CreateModal v-if="showModal" @close="showModal = false" />
+        <CreateStoryModal v-if="showModal" @close="showModal = false" />
 
         <Button>
           <Link href="route('stories.join')"> Join Story </Link>

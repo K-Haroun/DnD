@@ -1,11 +1,11 @@
 <script setup>
-import CreateModalField from "./CreateModalField.vue";
-import CreateModalInput from "./CreateModalInput.vue";
-import CreateModalInputFile from "./CreateModalInputFile.vue";
-import CreateModalLabel from "./CreateModalLabel.vue";
+import CreateModalField from "../../../components/modals/CreateModalField.vue";
+import CreateModalInput from "../../../components/modals/CreateModalInput.vue";
+import CreateModalInputFile from "../../../components/modals/CreateModalInputFile.vue";
+import CreateModalLabel from "../../../components/modals/CreateModalLabel.vue";
 import { useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
-import CreateModalTextArea from "./CreateModalTextArea.vue";
+import CreateModalTextArea from "../../../components/modals/CreateModalTextArea.vue";
 
 const form = useForm({
   title: "",
