@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/layouts/AppLayout.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import { computed, ref } from "vue";
 import CharactersTab from "./Tabs/CharactersTab.vue";
 import InventoryTab from "./Tabs/InventoryTab.vue";
 import SpellsTab from "./Tabs/SpellsTab.vue";
@@ -14,6 +14,7 @@ const breadcrumbs = [
     href: "/story",
   },
 ];
+
 
 const props = defineProps(["story", "isGameMaster"]);
 
@@ -43,6 +44,13 @@ const submit = () => {
     },
   });
 };
+
+const page = usePage();
+const message = computed(() => 
+{
+  // page.attrs.flash.message ? page.attrs.flash.message : '';
+});
+
 </script>
 
 <template>

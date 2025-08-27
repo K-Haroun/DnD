@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Http\Request;
 use App\Http\Resources\CharacterResource;
 use App\Models\Character;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class CharacterController extends Controller
 {
@@ -99,6 +101,6 @@ class CharacterController extends Controller
         
         Character::create($validatedData);
 
-        return to_route('stories.show', $request->story_id)->with('message', 'Character created successfully!');
+        redirect()->route('stories.show', $request->story_id)->with('message', 'Character created successfully!');
     }
 }
