@@ -4,7 +4,6 @@ import CreateModalInput from "../../../components/modals/CreateModalInput.vue";
 import CreateModalInputFile from "../../../components/modals/CreateModalInputFile.vue";
 import CreateModalLabel from "../../../components/modals/CreateModalLabel.vue";
 import { useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
 import CreateModalTextArea from "../../../components/modals/CreateModalTextArea.vue";
 
 const form = useForm({
@@ -33,6 +32,7 @@ const handleFileChange = (event) => {
 
 <template>
   <div
+    @click.self="$emit('close')"
     class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
   >
     <div class="bg-secondary p-6 rounded shadow-lg">
@@ -89,10 +89,18 @@ const handleFileChange = (event) => {
           </div>
 
           <div class="w-100 flex justify-between mt-3">
-            <button type="button" @click="$emit('close')" class="border rounded border-primary/70 bg-primary/60 hover:bg-primary transition-colors duration-300 cursor-pointer text-sm py-2 px-4">
+            <button
+              type="button"
+              @click="$emit('close')"
+              class="border rounded border-primary/70 bg-primary/60 hover:bg-primary transition-colors duration-300 cursor-pointer text-sm py-2 px-4"
+            >
               Cancel
             </button>
-            <button type="submit" :disabled="form.processing" class="border rounded border-primary/70 bg-primary/60 hover:bg-primary transition-colors duration-300 cursor-pointer text-sm py-2 px-4">
+            <button
+              type="submit"
+              :disabled="form.processing"
+              class="border rounded border-primary/70 bg-primary/60 hover:bg-primary transition-colors duration-300 cursor-pointer text-sm py-2 px-4"
+            >
               Create Story
             </button>
           </div>

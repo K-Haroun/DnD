@@ -1,27 +1,27 @@
 <script setup>
-
-import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link, usePage, router } from '@inertiajs/vue3';
-import StoriesBox from '@/components/stories/StoriesBox.vue';
-import Button from '@/components/ui/button/Button.vue';
-import Pagination from '@/components/ui/pagination/pagination.vue';
-import CreateStoryModal from './Create/CreateStoryModal.vue'
-import { ref } from 'vue';
+import AppLayout from "@/layouts/AppLayout.vue";
+import { Head, Link, usePage, router } from "@inertiajs/vue3";
+import StoriesBox from "@/components/stories/StoriesBox.vue";
+import Button from "@/components/ui/button/Button.vue";
+import Pagination from "@/components/ui/pagination/pagination.vue";
+import CreateStoryModal from "./Create/CreateStoryModal.vue";
+import { ref } from "vue";
+import JoinStoryModal from "./Components/JoinStoryModal.vue";
 
 const breadcrumbs = [
-    {
-        title: 'Stories',
-        href: '/stories',
-    },
+  {
+    title: "Stories",
+    href: "/stories",
+  },
 ];
 
-const showModal = ref(false)
+const showCreateModal = ref(false);
+const showJoinModal = ref(false);
 
-const openModal = () => showModal.value = true
+const openCreateModal = () => (showCreateModal.value = true);
+const openJoinModal = () => (showJoinModal.value = true);
 
-const page = usePage()
-
-defineProps(['stories']);
+defineProps(["stories"]);
 </script>
 
 <template>
@@ -30,12 +30,11 @@ defineProps(['stories']);
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="flex flex-1 flex-col gap-1 my-5 mx-10">
       <div class="flex gap-3 text-sm mb-2">
-        <Button @click="openModal"> Create Story </Button>
-        <CreateStoryModal v-if="showModal" @close="showModal = false" />
+        <Button @click="openCreateModal"> Create Story </Button>
+        <CreateStoryModal v-if="showCreateModal" @close="showCreateModal = false" />
 
-        <Button>
-          <Link href="route('stories.join')"> Join Story </Link>
-        </Button>
+        <Button @click="openJoinModal"> Join Story </Button>
+        <JoinStoryModal v-if="showJoinModal" @close="showJoinModal = false" />
       </div>
       <Link
         v-if="$page.props.auth.user"

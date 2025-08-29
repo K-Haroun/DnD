@@ -1,12 +1,12 @@
 <script setup>
 import AppLayout from "@/layouts/AppLayout.vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
+import { computed, ref, Transition } from "vue";
 import CharactersTab from "./Tabs/CharactersTab.vue";
 import InventoryTab from "./Tabs/InventoryTab.vue";
 import SpellsTab from "./Tabs/SpellsTab.vue";
 import MapTab from "./Tabs/MapTab.vue";
-import KebabMenu from "./Delete/KebabMenu.vue";
+import { UserPlus } from "lucide-vue-next";
 
 const breadcrumbs = [
   {
@@ -15,12 +15,10 @@ const breadcrumbs = [
   },
 ];
 
-
 const props = defineProps(["story", "isGameMaster"]);
-
 const isGameMaster = ref(props.isGameMaster);
-
 const currentTab = ref("characters");
+const joinCodeSlide = ref(false);
 
 const tabs = {
   characters: CharactersTab,
@@ -44,13 +42,6 @@ const submit = () => {
     },
   });
 };
-
-const page = usePage();
-const message = computed(() => 
-{
-  // page.attrs.flash.message ? page.attrs.flash.message : '';
-});
-
 </script>
 
 <template>
@@ -59,7 +50,22 @@ const message = computed(() =>
   <AppLayout :breadcrumbs="breadcrumbs">
     <div class="my-10">
       <div class="flex justify-end pr-10">
-        <KebabMenu v-if="isGameMaster" :story="props.story" />
+        <!-- <KebabMenu v-if="isGameMaster" :story="props.story" /> -->
+        <div v-if="isGameMaster">
+          <button
+            @click="joinCodeSlide = !joinCodeSlide"
+            class="border-1 rounded-full border-white/70 p-3 hover:bg-primary hover:border-primary cursor-pointer transition-colors duration-300"
+          >
+          <div class="flex items-center gap-2">          
+            <UserPlus class="text-white/70"/>
+            <Transition name="slide">
+              <p v-if="joinCodeSlide" class="text-sm whitespace-nowrap">
+                Join Code: {{ story.join_code }}
+              </p>
+            </Transition>
+          </div>
+          </button>
+        </div>
       </div>
       <div class="text-center text-4xl mt-5 text-shadow-lg">
         {{ story.title }}
@@ -138,3 +144,25 @@ const message = computed(() =>
     </div>
   </AppLayout>
 </template>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 1s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  max-width: 0;
+  transform: translateX(10px);
+  overflow: hidden;
+}
+.slide-enter-to,
+.slide-leave-from {
+  color: white;
+  opacity: 1;
+  max-width: 200px;
+  transform: translateX(0);
+  overflow: hidden;
+}
+</style>

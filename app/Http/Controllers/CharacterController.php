@@ -35,7 +35,7 @@ class CharacterController extends Controller
                 'min:3',
                 'max:22',
                 'regex:/^[\p{L}\p{N}\s]+$/u',
-        ],
+            ],
             'race' => [
                 'required',
                 'min:3',
@@ -102,5 +102,80 @@ class CharacterController extends Controller
         Character::create($validatedData);
 
         redirect()->route('stories.show', $request->story_id)->with('message', 'Character created successfully!');
+    }
+
+    public function update(Request $request, Character $character)
+    {
+
+        $validatedData = $request->validate([
+            'name' => [
+                'required',
+                'min:3',
+                'max:22',
+                'regex:/^[\p{L}\p{N}\s]+$/u',
+            ],
+            'race' => [
+                'required',
+                'min:3',
+                'max:22',
+                'regex:/^[\p{L}\p{N}\s]+$/u',
+            ],
+            'class' => [
+                'required',
+                'min:3',
+                'max:22',
+                'regex:/^[\p{L}\p{N}\s]+$/u',
+            ],
+            'alignment' => [
+                'required',
+                'min:3',
+                'max:22',
+                'regex:/^[\p{L}\p{N}\s]+$/u',
+            ],
+            'backstory' => [
+                'nullable',
+                'string',
+                'max:255'
+            ],
+            'level' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+            'current_hp' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+            'max_hp' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+            'armor_class' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+            'initiative' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+            'speed' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+            'strength' => [
+                'required',
+                'integer',
+                'min:1'
+            ],
+        ]);
+
+        $character->update($validatedData);
+        
+        redirect()->route('stories.show', [ 'story' => $request->story])->with('message', 'Character updated successfully!');
     }
 }

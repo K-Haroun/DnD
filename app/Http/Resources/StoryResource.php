@@ -25,6 +25,7 @@ class StoryResource extends JsonResource
             'plot' => $this->plot,
             'map' => $this->map,
             'map_url' => $this->map ? Storage::url($this->map) : null,
+            'join_code' => $this->join_code,
         ];
     }
 }

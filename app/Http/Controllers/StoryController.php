@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class StoryController extends Controller
 {
@@ -21,7 +22,7 @@ class StoryController extends Controller
     public function show(Story $story)
     {
 
-        $story->load(['users', 'characters.items', 'characters.spells', 'npcs']);
+        $story->load(['users', 'characters.items', 'characters.spells', 'characters.user', 'npcs']);
 
         $user = Auth::user();
 
@@ -63,6 +64,7 @@ class StoryController extends Controller
         'title' => $validatedData['title'],
         'plot' => $validatedData['plot'] ?? null,
         'map' => $path,
+        'join_code' => strtoupper(Str::random(6))
     ];
 
     $story = Story::create($storyData);
@@ -95,4 +97,25 @@ class StoryController extends Controller
         return redirect()->route('stories.index')
                          ->with('message', 'Story deleted successfully!');
     }
+
+    public function joinWithCode(Request $request)
+    {
+        $validated = $request->validate([
+            'join_code' => 'required|string|max:6|exists:stories,join_code',
+        ]);
+
+        $story = Story::where('join_code', $validated['join_code'])->first();
+        $user = Auth::user();
+
+        // Prevent duplicate joins
+        if ($story->users()->where('user_id', $user->id)->exists()) {
+            return back()->with('message', 'You already joined this story.');
+        }
+
+        $story->users()->attach($user->id, ['role' => 'player']);
+
+        return redirect()->route('stories.show', $story)
+                        ->with('message', 'You joined the story!');
+    }
+
 }

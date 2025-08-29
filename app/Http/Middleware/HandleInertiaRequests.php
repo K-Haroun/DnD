@@ -40,10 +40,10 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user() ? [
+                    'id' => $request->user()->id,
                     'name' => $request->user()->name,
                 ] : null,
             ],
-            // This is the code you need to add for flash messages
             'flash' => [
                 'message' => fn() => $request->session()->get('message')
             ],

@@ -1,51 +1,65 @@
 <script setup>
-import { UserPlus } from 'lucide-vue-next';
-import Button from "@/components/ui/button/Button.vue";
-import { ref } from 'vue';
-import CreateCharacterModal from '@/pages/Characters/Create/CreateCharacterModal.vue';
+import {
+  UserPlus,
+  Shapes,
+  ArrowBigUpDash,
+  Cat,
+  SmilePlus,
+  HeartPulse,
+} from "lucide-vue-next";
+import { ref } from "vue";
+import EditCharacterModal from "@/pages/Characters/Edit/EditCharacterModal.vue";
+import CharacterComponent from "@/pages/Characters/Components/CharacterComponent.vue";
+import { usePage } from "@inertiajs/vue3";
 
-defineProps(['story']);
+defineProps(["story"]);
 
-const showModal = ref(false);
+const activeCharacter = ref(null);
+const page = usePage();
+const user = page.props.auth.user
 
-const openModal = () => (showModal.value = true);
+const openModal = (character) => {
+  if (character.user.id == user.id) {
+    activeCharacter.value = character;
+  }
+};
+
+const closeModal = () => {
+  activeCharacter.value = null;
+};
+
+const charAttrs = [
+  {
+    title: "class",
+    icon: Shapes,
+  },
+  {
+    title: "race",
+    icon: Cat,
+  },
+  {
+    title: "alignment",
+    icon: SmilePlus,
+  },
+];
 </script>
 
 <template>
-    <div class="grid grid-cols-5 gap-5 mx-20">
-        <!-- Characters -->
-        <Button @click="openModal" class="border border-primary shadow-sm h-55 w-35 grid place-content-center text-primary bg-secondary hover:shadow-lg hover:bg-primary/5 hover:text-primary-foreground transition-all duration-300 cursor-pointer">
-            <UserPlus class="size-20"/>
-        </Button>
-        <CreateCharacterModal v-if="showModal" @close="showModal = false" :story="story"/>
-        <div v-if="story.characters && story.characters.length" v-for="character in story.characters" :key="character.id" class="basis-50 border p-5 text-sm bg-primary rounded">
-            <h2 class="text-center text-lg font-bold mb-3">{{ character.name }}</h2>
-            <ul>
-                <li>
-                    <p>Class: {{ character.class }}</p>
-                </li>
-                <li>
-                    <p>Level: {{ character.level }}</p>
-                </li>
-                <li>
-                    <p>Max HP: {{ character.max_hp }}</p>
-                </li>
-                <li>
-                    <p>Armor Class: {{ character.armor_class }}</p>
-                </li>
-                <li>
-                    <p>Speed: {{ character.speed }}</p>
-                </li>
-                <li>
-                    <p>Strength: {{ character.strength }}</p>
-                </li>
-                <li>
-                    <p>Initiative: {{ character.initiative }}</p>
-                </li>
-                <li>
-                    <p>Alignment: {{ character.alignment }}</p>
-                </li>
-            </ul>
-        </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mx-auto text-secondary w-fit h-full">
+    <EditCharacterModal
+      v-if="activeCharacter"
+      @close="closeModal"
+      :character="activeCharacter"
+      :story="story"
+    />
+    <div
+      v-if="story.characters && story.characters.length"
+      v-for="character in story.characters"
+      :key="character.id"
+      @click="openModal(character)"
+      class="h-fit w-fit border text-xs bg-tertiary rounded"
+    >
+      <CharacterComponent :character="character" :charAttrs="charAttrs" />
     </div>
+  </div>
 </template>

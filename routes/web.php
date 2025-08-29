@@ -32,10 +32,12 @@ Route::get('/stories/{story}', [StoryController::class, 'show'])->name('stories.
 Route::post('/stories/store', [StoryController::class, 'store'])->name('stories.store');
 Route::patch('/stories/{story}', [StoryController::class, 'update'])->name('stories.update');
 Route::delete('/stories/{story}', [StoryController::class, 'destroy'])->name('stories.delete');
+Route::post('/stories/join', [StoryController::class, 'joinWithCode'])->name('stories.joinWithCode')->middleware('auth');
 
 // Characters
 Route::get('/characters', [CharacterController::class, 'index'])->name('characters.index');
 Route::post('/characters', [CharacterController::class, 'store'])->name('characters.store');
+Route::patch('/characters/{character}', [CharacterController::class, 'update'])->name('characters.update');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
