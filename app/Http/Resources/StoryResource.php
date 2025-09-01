@@ -21,6 +21,7 @@ class StoryResource extends JsonResource
             'users' => $this->whenLoaded('users', fn () => UserResource::collection($this->users)),
             'characters' => $this->whenLoaded('characters', fn () => CharacterResource::collection($this->characters)),
             'npcs' => $this->whenLoaded('npcs', fn () => NPCResource::collection($this->npcs)),
+            'notes' => $this->whenLoaded('notes', fn () => NoteResource::collection($this->notes)),
             'title' => $this->title,
             'plot' => $this->plot,
             'map' => $this->map,

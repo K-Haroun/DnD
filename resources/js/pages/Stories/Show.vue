@@ -6,7 +6,7 @@ import CharactersTab from "./Tabs/CharactersTab.vue";
 import InventoryTab from "./Tabs/InventoryTab.vue";
 import SpellsTab from "./Tabs/SpellsTab.vue";
 import MapTab from "./Tabs/MapTab.vue";
-import { UserPlus } from "lucide-vue-next";
+import { UserPlus, NotebookPen, Plus } from "lucide-vue-next";
 
 const breadcrumbs = [
   {
@@ -19,6 +19,8 @@ const props = defineProps(["story", "isGameMaster"]);
 const isGameMaster = ref(props.isGameMaster);
 const currentTab = ref("characters");
 const joinCodeSlide = ref(false);
+const showNotes = ref(false);
+const createNote = ref(false);
 
 const tabs = {
   characters: CharactersTab,
@@ -29,18 +31,43 @@ const tabs = {
 
 const continueStory = ref(false);
 
-const form = useForm({
+const plotForm = useForm({
   plot: props.story.plot,
 });
 
-const submit = () => {
-  form.patch(route("stories.update", props.story), {
+const submitPlotForm = () => {
+  plotForm.patch(route("stories.update", props.story), {
     preserveScroll: true,
     onFinish: () => {
-      form.reset();
+      plotForm.reset();
       continueStory.value = false;
+      showNotes.value = false;
     },
   });
+};
+
+const noteForm = useForm({
+  note: "",
+  story_id: props.story.id,
+});
+
+const submitNoteForm = () => {
+  noteForm.post(route("notes.store", noteForm), {
+    preserveScroll: true,
+    onFinish: () => {
+      noteForm.reset();
+      continueStory.value = false;
+      showNotes.value = true;
+    },
+  });
+};
+
+const openNotes = () => {
+  showNotes.value = !showNotes.value;
+};
+
+const addNote = () => {
+  createNote.value = true;
 };
 </script>
 
@@ -48,44 +75,53 @@ const submit = () => {
   <Head title="Story" />
 
   <AppLayout :breadcrumbs="breadcrumbs">
-    <div class="my-10">
-      <div class="flex justify-end pr-10">
+    <div class="relative my-10">
+      <div class="absolute right-10">
         <!-- <KebabMenu v-if="isGameMaster" :story="props.story" /> -->
-        <div v-if="isGameMaster">
-          <button
-            @click="joinCodeSlide = !joinCodeSlide"
-            class="border-1 rounded-full border-white/70 p-3 hover:bg-primary hover:border-primary cursor-pointer transition-colors duration-300"
-          >
-          <div class="flex items-center gap-2">          
-            <UserPlus class="text-white/70"/>
-            <Transition name="slide">
-              <p v-if="joinCodeSlide" class="text-sm whitespace-nowrap">
-                Join Code: {{ story.join_code }}
-              </p>
-            </Transition>
+        <div class="w-fit flex flex-col justify-center items-end gap-5">
+          <div v-if="isGameMaster">
+            <button
+              @click="joinCodeSlide = !joinCodeSlide"
+              class="border-1 rounded-full border-white p-2 hover:bg-primary hover:border-primary cursor-pointer transition-colors duration-300"
+            >
+              <div class="flex items-center gap-2">
+                <UserPlus class="size-5 text-white" />
+                <Transition name="slide">
+                  <p v-if="joinCodeSlide" class="text-sm whitespace-nowrap">
+                    Join Code: {{ story.join_code }}
+                  </p>
+                </Transition>
+              </div>
+            </button>
           </div>
-          </button>
         </div>
       </div>
-      <div class="text-center text-4xl mt-5 text-shadow-lg">
-        {{ story.title }}
-      </div>
-      <div class="my-18 flex flex-col justify-center items-center gap-12 px-20">
+      <div class="flex flex-col justify-center items-center gap-12 px-20 pb-10">
+        <div class="text-center text-4xl text-shadow-lg mx-auto">
+          {{ story.title }}
+        </div>
         <div
-          v-if="!continueStory"
-          class="p-10 border h-70 overflow-y-auto wrap-break-word bg-primary/50 shadow-2xl w-[100%]"
+          v-if="!continueStory && !showNotes"
+          class="relative p-10 border h-100 overflow-y-auto wrap-break-word bg-primary/50 shadow-2xl w-full"
         >
+          <!-- notes toggle-->
+          <button @click="openNotes" class="absolute top-2 right-2 cursor-pointer">
+            <NotebookPen />
+          </button>
+
           <!-- plot -->
-          {{ story.plot }}
+          <p>
+            {{ story.plot }}
+          </p>
         </div>
-        <div v-else class="relative w-[100%]">
-          <form id="plot-form" @submit.prevent="submit">
+        <div v-else-if="continueStory" class="relative w-full">
+          <form id="plot-form" @submit.prevent="submitPlotForm">
             <textarea
               name="plot"
               id="plot"
-              v-model="form.plot"
-              class="resize-none focus:outline-none p-10 border h-70 w-[100%] overflow-auto bg-primary/70 shadow-2xl"
-            ></textarea>
+              v-model="plotForm.plot"
+              class="resize-none focus:outline-none p-10 border h-100 w-full overflow-auto bg-primary/70 shadow-2xl"
+            />
             <div
               class="absolute self-baseline bottom-2 flex justify-between h-10 w-[100%] bg-primary"
             >
@@ -96,14 +132,64 @@ const submit = () => {
               <button
                 form="plot-form"
                 type="submit"
-                :disabled="form.processing"
-                class="h-[100%] border px-2 bg-secondary-foreground text-sm text-primary font-bold cursor-pointer"
+                :disabled="plotForm.processing"
+                class="h-full border px-2 bg-secondary-foreground text-sm text-primary font-bold cursor-pointer"
                 preserve-scroll
               >
                 Done
               </button>
             </div>
           </form>
+        </div>
+        <div
+          v-else-if="showNotes"
+          class="relative p-10 border h-100 overflow-y-auto wrap-break-word bg-primary/50 shadow-2xl w-full"
+        >
+          <div class="absolute top-2 right-2 text-primary space-x-2">
+            <button @click="addNote" class="cursor-pointer">
+              <Plus class="text-white" />
+            </button>
+            <button @click="openNotes" class="cursor-pointer">
+              <NotebookPen class="hover:text-primary" />
+            </button>
+          </div>
+
+          <!-- notes -->
+          <div v-if="story.notes && story.notes.length" class="flex gap-3">
+            <div
+            v-for="note in story.notes"
+            :key="note.id"
+              class="h-50 w-50 p-3 bg-tertiary/50 text-white border-2 border-secondary overflow-auto text-xs shadow-sm"
+            >
+              <p>
+                {{ note.note }}
+              </p>
+            </div>
+
+            <!-- add new note -->
+            <form id="note-form" @submit.prevent="submitNoteForm">
+              <div
+                v-if="createNote"
+                class="relative h-50 w-50 bg-tertiary/50 text-white border-2 border-secondary overflow-auto text-xs shadow-sm"
+              >
+                <textarea
+                  name="note"
+                  id="note"
+                  v-model="noteForm.note"
+                  class="absolute resize-none focus:border-white h-full w-full bg-transparent text-white border-secondary overflow-auto text-xs"
+                />
+                <button
+                  form="note-form"
+                  type="submit"
+                  :disabled="noteForm.processing"
+                  class="absolute bottom-0 right-0 border px-2 bg-secondary-foreground text-sm text-primary font-bold cursor-pointer"
+                  preserve-scroll
+                >
+                  Done
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
 
         <div v-if="isGameMaster && !continueStory">
@@ -148,7 +234,7 @@ const submit = () => {
 <style scoped>
 .slide-enter-active,
 .slide-leave-active {
-  transition: all 1s ease;
+  transition: all 0.8s ease;
 }
 .slide-enter-from,
 .slide-leave-to {

@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CharacterResource;
 use App\Models\Character;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 
 class CharacterController extends Controller
 {
