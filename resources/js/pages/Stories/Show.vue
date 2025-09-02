@@ -1,26 +1,26 @@
 <script setup>
 import AppLayout from "@/layouts/AppLayout.vue";
 import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
-import { computed, ref, Transition } from "vue";
+import { ref } from "vue";
 import CharactersTab from "./Tabs/CharactersTab.vue";
 import InventoryTab from "./Tabs/InventoryTab.vue";
 import SpellsTab from "./Tabs/SpellsTab.vue";
 import MapTab from "./Tabs/MapTab.vue";
 import { UserPlus, NotebookPen, Plus } from "lucide-vue-next";
 
-const breadcrumbs = [
-  {
-    title: "Story",
-    href: "/story",
-  },
-];
-
 const props = defineProps(["story", "isGameMaster"]);
+
 const isGameMaster = ref(props.isGameMaster);
 const currentTab = ref("characters");
 const joinCodeSlide = ref(false);
+
+// existing state
 const showNotes = ref(false);
 const createNote = ref(false);
+const continueStory = ref(false);
+
+// track which note is being edited
+const editingNoteId = ref(null);
 
 const tabs = {
   characters: CharactersTab,
@@ -29,12 +29,8 @@ const tabs = {
   map: MapTab,
 };
 
-const continueStory = ref(false);
-
-const plotForm = useForm({
-  plot: props.story.plot,
-});
-
+// plot form (unchanged)
+const plotForm = useForm({ plot: props.story.plot });
 const submitPlotForm = () => {
   plotForm.patch(route("stories.update", props.story), {
     preserveScroll: true,
@@ -46,26 +42,48 @@ const submitPlotForm = () => {
   });
 };
 
+// NEW: create + edit forms
 const noteForm = useForm({
   note: "",
   story_id: props.story.id,
 });
 
-const submitNoteForm = () => {
-  noteForm.post(route("notes.store", noteForm), {
+const editNoteForm = useForm({
+  note: "",
+  story_id: props.story.id,
+});
+
+// CREATE: post a new note
+function submitNoteForm() {
+  noteForm.post(route("notes.store"), {
     preserveScroll: true,
-    onFinish: () => {
+    onSuccess: () => {
       noteForm.reset();
-      continueStory.value = false;
-      showNotes.value = true;
+      createNote.value = false;
     },
   });
-};
+}
+
+// EDIT: start editing a note
+function editNote(note) {
+  editingNoteId.value = note.id;
+  editNoteForm.note = note.note;
+}
+
+// EDIT: save changes
+function submitEditNoteForm(note) {
+  editNoteForm.patch(route("notes.update", note.id), {
+    preserveScroll: true,
+    onSuccess: () => {
+      editNoteForm.reset();
+      editingNoteId.value = null;
+    },
+  });
+}
 
 const openNotes = () => {
   showNotes.value = !showNotes.value;
 };
-
 const addNote = () => {
   createNote.value = true;
 };
@@ -136,14 +154,14 @@ const addNote = () => {
                 class="h-full border px-2 bg-secondary-foreground text-sm text-primary font-bold cursor-pointer"
                 preserve-scroll
               >
-                Done
+                Save
               </button>
             </div>
           </form>
         </div>
         <div
           v-else-if="showNotes"
-          class="relative p-10 border h-100 overflow-y-auto wrap-break-word bg-primary/50 shadow-2xl w-full"
+          class="relative p-10 border h-100 bg-primary/50 shadow-2xl w-full"
         >
           <div class="absolute top-2 right-2 text-primary space-x-2">
             <button @click="addNote" class="cursor-pointer">
@@ -155,22 +173,44 @@ const addNote = () => {
           </div>
 
           <!-- notes -->
-          <div v-if="story.notes && story.notes.length" class="flex gap-3">
-            <div
-            v-for="note in story.notes"
-            :key="note.id"
-              class="h-50 w-50 p-3 bg-tertiary/50 text-white border-2 border-secondary overflow-auto text-xs shadow-sm"
-            >
-              <p>
-                {{ note.note }}
-              </p>
+          <div
+            v-if="story.notes && story.notes.length"
+            class="h-full grid grid-cols-5 gap-3"
+          >
+            <div v-for="note in story.notes" :key="note.id">
+              <!-- VIEW mode -->
+              <div v-if="editingNoteId !== note.id"
+                @click="editNote(note)" class="size-35 p-3 bg-tertiary/50 text-white
+                border-2 border-secondary overflow-auto text-xs shadow-sm cursor-pointer
+                hover:bg-tertiary/70" >
+                <p>{{ note.note }}</p>
+              </div>
+
+              <!-- EDIT mode -->
+              <form
+                v-else
+                @submit.prevent="submitEditNoteForm(note)"
+                class="relative size-35 p-3 bg-tertiary/50 text-white border-2 border-secondary overflow-auto text-xs shadow-sm"
+              >
+                <textarea
+                  v-model="editNoteForm.note"
+                  class="absolute resize-none focus:border-white h-full w-full bg-transparent text-white border-secondary overflow-auto text-xs"
+                />
+                <button
+                  type="submit"
+                  :disabled="editNoteForm.processing"
+                  class="absolute bottom-0 right-0 border px-2 bg-secondary-foreground text-sm text-primary font-bold cursor-pointer"
+                >
+                  Save
+                </button>
+              </form>
             </div>
 
             <!-- add new note -->
             <form id="note-form" @submit.prevent="submitNoteForm">
               <div
                 v-if="createNote"
-                class="relative h-50 w-50 bg-tertiary/50 text-white border-2 border-secondary overflow-auto text-xs shadow-sm"
+                class="relative size-35 bg-tertiary/50 text-white border-0 border-secondary overflow-auto text-xs shadow-sm"
               >
                 <textarea
                   name="note"
@@ -179,13 +219,18 @@ const addNote = () => {
                   class="absolute resize-none focus:border-white h-full w-full bg-transparent text-white border-secondary overflow-auto text-xs"
                 />
                 <button
+                @click="createNote = false"
+                class="absolute bottom-0 left-0 text-xs border px-2 bg-secondary-foreground text-primary font-bold cursor-pointer"
+                >
+                  ✕
+                </button>
+                <button
                   form="note-form"
                   type="submit"
                   :disabled="noteForm.processing"
-                  class="absolute bottom-0 right-0 border px-2 bg-secondary-foreground text-sm text-primary font-bold cursor-pointer"
-                  preserve-scroll
+                  class="absolute bottom-0 right-0 text-xs border px-2 bg-secondary-foreground text-primary font-bold cursor-pointer"
                 >
-                  Done
+                  ✓
                 </button>
               </div>
             </form>
