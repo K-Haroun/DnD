@@ -6,11 +6,15 @@ import CharactersTab from "./Tabs/CharactersTab.vue";
 import InventoryTab from "./Tabs/InventoryTab.vue";
 import SpellsTab from "./Tabs/SpellsTab.vue";
 import MapTab from "./Tabs/MapTab.vue";
-import { UserPlus, NotebookPen, Plus } from "lucide-vue-next";
+import { UserPlus, NotebookPen, Plus, Trash2 } from "lucide-vue-next";
+import CreateCharacterModal from "../Characters/Create/CreateCharacterModal.vue";
 
-const props = defineProps(["story", "isGameMaster"]);
+const props = defineProps(["story", "isGameMaster", "hasCharacter"]);
+const page = usePage();
 
 const isGameMaster = ref(props.isGameMaster);
+const hasCharacter = ref(props.hasCharacter);
+const story = props.story;
 const currentTab = ref("characters");
 const joinCodeSlide = ref(false);
 
@@ -18,6 +22,7 @@ const joinCodeSlide = ref(false);
 const showNotes = ref(false);
 const createNote = ref(false);
 const continueStory = ref(false);
+const errors = ref({});
 
 // track which note is being edited
 const editingNoteId = ref(null);
@@ -61,6 +66,9 @@ function submitNoteForm() {
       noteForm.reset();
       createNote.value = false;
     },
+    onError: (errBag) => {
+      errors.value = errBag;
+    },
   });
 }
 
@@ -84,34 +92,48 @@ function submitEditNoteForm(note) {
 const openNotes = () => {
   showNotes.value = !showNotes.value;
 };
+
 const addNote = () => {
-  createNote.value = true;
+  if (props.story.notes.length >= 10) {
+    page.props.flash.error = "Cannot add more than 10 notes!";
+  } else {
+    createNote.value = true;
+  }
 };
 </script>
 
 <template>
   <Head title="Story" />
 
-  <AppLayout :breadcrumbs="breadcrumbs">
+  <AppLayout :breadcrumbs="breadcrumbs" :errors="errors">
     <div class="relative my-10">
+    <CreateCharacterModal @close="hasCharacter = true" :story v-if="!hasCharacter" />
       <div class="absolute right-10">
-        <!-- <KebabMenu v-if="isGameMaster" :story="props.story" /> -->
-        <div class="w-fit flex flex-col justify-center items-end gap-5">
-          <div v-if="isGameMaster">
-            <button
-              @click="joinCodeSlide = !joinCodeSlide"
-              class="border-1 rounded-full border-white p-2 hover:bg-primary hover:border-primary cursor-pointer transition-colors duration-300"
-            >
-              <div class="flex items-center gap-2">
-                <UserPlus class="size-5 text-white" />
-                <Transition name="slide">
-                  <p v-if="joinCodeSlide" class="text-sm whitespace-nowrap">
-                    Join Code: {{ story.join_code }}
-                  </p>
-                </Transition>
-              </div>
-            </button>
-          </div>
+        <div
+          v-if="isGameMaster"
+          class="w-fit flex flex-col justify-center items-end gap-3"
+        >
+          <Link
+            :href="`/stories/${story.id}`"
+            method="delete"
+            as="button"
+            preserve-scroll
+          >
+            <Trash2 class="size-5 mr-2 hover:text-destructive cursor-pointer" />
+          </Link>
+          <button
+            @click="joinCodeSlide = !joinCodeSlide"
+            class="border-1 rounded-full border-white p-2 hover:bg-primary hover:border-primary cursor-pointer transition-colors duration-300"
+          >
+            <div class="flex items-center gap-2">
+              <UserPlus class="size-5 text-white" />
+              <Transition name="slide">
+                <p v-if="joinCodeSlide" class="text-sm whitespace-nowrap">
+                  Join Code: {{ story.join_code }}
+                </p>
+              </Transition>
+            </div>
+          </button>
         </div>
       </div>
       <div class="flex flex-col justify-center items-center gap-12 px-20 pb-10">
@@ -173,43 +195,55 @@ const addNote = () => {
           </div>
 
           <!-- notes -->
-          <div
-            v-if="story.notes && story.notes.length"
-            class="h-full grid grid-cols-5 gap-3"
-          >
-            <div v-for="note in story.notes" :key="note.id">
+          <div class="h-full grid grid-cols-5 gap-3">
+            <div
+              v-if="story.notes && story.notes.length"
+              v-for="note in story.notes"
+              :key="note.id"
+            >
               <!-- VIEW mode -->
-              <div v-if="editingNoteId !== note.id"
-                @click="editNote(note)" class="size-35 p-3 bg-tertiary/50 text-white
-                border-2 border-secondary overflow-auto text-xs shadow-sm cursor-pointer
-                hover:bg-tertiary/70" >
+              <div
+                v-if="editingNoteId !== note.id"
+                @click="editNote(note)"
+                class="size-35 p-3 bg-tertiary/50 text-white border-2 border-secondary overflow-auto text-xs shadow-sm cursor-pointer hover:bg-tertiary/70"
+              >
                 <p>{{ note.note }}</p>
               </div>
 
               <!-- EDIT mode -->
               <form
+                id="edit-note-form"
                 v-else
                 @submit.prevent="submitEditNoteForm(note)"
-                class="relative size-35 p-3 bg-tertiary/50 text-white border-2 border-secondary overflow-auto text-xs shadow-sm"
+                class="relative size-35 bg-tertiary/50 text-white border-0 border-secondary overflow-auto text-xs shadow-sm"
               >
                 <textarea
                   v-model="editNoteForm.note"
                   class="absolute resize-none focus:border-white h-full w-full bg-transparent text-white border-secondary overflow-auto text-xs"
                 />
+                <Link
+                  :href="`/notes/${note.id}`"
+                  method="delete"
+                  as="button"
+                  class="absolute bottom-0 left-0 text-xs border px-2 bg-secondary-foreground text-primary font-bold cursor-pointer"
+                  preserve-scroll
+                >
+                  ✕
+                </Link>
                 <button
+                  form="edit-note-form"
                   type="submit"
                   :disabled="editNoteForm.processing"
-                  class="absolute bottom-0 right-0 border px-2 bg-secondary-foreground text-sm text-primary font-bold cursor-pointer"
+                  class="absolute bottom-0 right-0 text-xs border px-2 bg-secondary-foreground text-primary font-bold cursor-pointer"
                 >
-                  Save
+                  ✓
                 </button>
               </form>
             </div>
 
             <!-- add new note -->
-            <form id="note-form" @submit.prevent="submitNoteForm">
+            <form v-if="createNote" @submit.prevent="submitNoteForm">
               <div
-                v-if="createNote"
                 class="relative size-35 bg-tertiary/50 text-white border-0 border-secondary overflow-auto text-xs shadow-sm"
               >
                 <textarea
@@ -219,13 +253,12 @@ const addNote = () => {
                   class="absolute resize-none focus:border-white h-full w-full bg-transparent text-white border-secondary overflow-auto text-xs"
                 />
                 <button
-                @click="createNote = false"
-                class="absolute bottom-0 left-0 text-xs border px-2 bg-secondary-foreground text-primary font-bold cursor-pointer"
+                  @click="createNote = false"
+                  class="absolute bottom-0 left-0 text-xs border px-2 bg-secondary-foreground text-primary font-bold cursor-pointer"
                 >
                   ✕
                 </button>
                 <button
-                  form="note-form"
                   type="submit"
                   :disabled="noteForm.processing"
                   class="absolute bottom-0 right-0 text-xs border px-2 bg-secondary-foreground text-primary font-bold cursor-pointer"

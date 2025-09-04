@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -61,5 +62,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isGameMaster(Story $story)
     {
         return $this->stories->where('id', $story->id)->first()?->pivot->role === 'game_master';
+    }
+
+    public function hasCharacter(Story $story)
+    {
+        $userId = Auth::id();
+
+        return $story->characters()->where('user_id', $userId)->exists();
     }
 }

@@ -18,13 +18,15 @@ Route::get('dashboard', function () {
 Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
 Route::get('/stories/create', [StoryController::class, 'create'])->name('stories.create');
 Route::get('/stories/{story}', [StoryController::class, 'show'])->name('stories.show');
-Route::post('/stories/store', [StoryController::class, 'store'])->name('stories.store');
+Route::post('/stories', [StoryController::class, 'store'])->name('stories.store');
 Route::patch('/stories/{story}', [StoryController::class, 'update'])->name('stories.update');
 Route::delete('/stories/{story}', [StoryController::class, 'destroy'])->name('stories.delete');
 Route::post('/stories/join', [StoryController::class, 'joinWithCode'])->name('stories.joinWithCode')->middleware('auth');
 
 // Notes
-Route::post('/notes/store', [NoteController::class, 'store'])->name('notes.store');
+Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+Route::patch('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
+Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.delete');
 
 // Characters
 Route::get('/characters', [CharacterController::class, 'index'])->name('characters.index');

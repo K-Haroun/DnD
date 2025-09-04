@@ -6,6 +6,7 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
+import Toast from 'vue3-toastify'
 import 'flowbite';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -17,6 +18,9 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(Toast, {
+            autoClose: 2000, // every toast defaults to 2s
+            })
             .mount(el);
     },
     progress: {

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use App\Rules\MaxNotes;
 
 class NoteController extends Controller
 {
@@ -33,7 +35,7 @@ class NoteController extends Controller
 
         $validatedData = $request->validate([
             'note' => 'string|max:255',
-            'story_id' => 'required|integer'
+            'story_id' => ['required', 'integer', new MaxNotes]
         ]);
 
         $validatedData['user_id'] = $userId;
@@ -41,7 +43,7 @@ class NoteController extends Controller
 
         Note::create($validatedData);
 
-        return redirect()->back()->with('message', 'Note Saved!');
+        return redirect()->back()->with('success', 'Note Saved!');
     }
 
     /**
@@ -65,7 +67,13 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        //
+        $validatedData = $request->validate([
+            'note' => 'string|max:255',
+        ]);
+
+        $note->update($validatedData);
+
+        return redirect()->back()->with('message', 'Note Updated!');
     }
 
     /**
@@ -73,6 +81,10 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        //
+        Gate::authorize('delete', $note);
+
+        $note->delete();
+
+        return redirect()->back();
     }
 }

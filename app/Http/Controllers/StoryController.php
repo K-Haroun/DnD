@@ -27,10 +27,12 @@ class StoryController extends Controller
         $user = Auth::user();
 
         $isGameMaster = $user->isGameMaster($story);
+        $hasCharacter = $user->hasCharacter($story);
 
         return inertia('Stories/Show', [
             'story' => StoryResource::make($story),
             'isGameMaster' => $isGameMaster,
+            'hasCharacter' => $hasCharacter,
         ]);
     }
 
@@ -94,8 +96,7 @@ class StoryController extends Controller
 
         $story->delete();
 
-        return redirect()->route('stories.index')
-                         ->with('message', 'Story deleted successfully!');
+        return to_route('stories.index')->with('success', 'Story deleted!');
     }
 
     public function joinWithCode(Request $request)
@@ -109,7 +110,7 @@ class StoryController extends Controller
 
         // Prevent duplicate joins
         if ($story->users()->where('user_id', $user->id)->exists()) {
-            return back()->with('message', 'You already joined this story.');
+            return back()->with('error', 'You already joined this story.');
         }
 
         $story->users()->attach($user->id, ['role' => 'player']);
